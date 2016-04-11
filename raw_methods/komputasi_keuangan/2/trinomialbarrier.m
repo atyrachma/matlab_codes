@@ -1,0 +1,113 @@
+clear all;
+clc;
+tic
+% MA5262 Komputasi Keuangan
+% Tugas Program Penentuan Harga Opsi Barrier dengan Metode Trinomial
+% Aty Rachmawati (10108050)
+disp('Program Penentuan Harga Opsi Barrier Call Eropa')
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Masukan 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+S0=50;
+r=0.07;
+sigma=0.3;
+T=1;
+K=55;
+M=60;
+B=40;
+t=0;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Perhitungan
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+S(1,1)=S0;
+delta=T/M;
+eta=log(S0/B)/(sigma*sqrt(delta));
+if floor(eta)==eta & ceil(eta)==eta
+    lambda=1;
+else
+    eta0=floor(eta);
+    lambda=eta/eta0;
+end
+lambda
+u=exp(lambda*sigma*sqrt(delta))
+d=exp(-lambda*sigma*sqrt(delta))
+
+pu=1/(2*lambda^2)+(r-sigma^2/2)*sqrt(delta)/(2*lambda*sigma);
+pm=1-1/lambda^2;
+pd=1/(2*lambda^2)-(r-sigma^2/2)*sqrt(delta)/(2*lambda*sigma);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Penentuan Harga Saham yang Mungkin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+for i=2:M+1
+    S(1,i)=S(1,i-1)*u;
+    for j=2:2*(i-1)+1
+        S(j,i)=S(j-1,i)*d;
+    end
+end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Penentuan Payoff pada Expiration Date
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    for i=1:size(S,1)
+        if S(i,M+1)> B
+            payoff(i)=max(S(i,M+1)-K,0);
+        else
+            payoff(i)=0;
+        end
+    end
+
+CO(:,M+1)=payoff';
+
+ for i=M:-1:1
+     for j=1:2*i-1
+         if S(j,i)> B
+             CO(j,i)=exp(-r*delta)*(pu*CO(j,i+1)+pm*CO(j+1,i+1)+pd*CO(j+2,i+1));
+         else
+             CO(j,i)=0;
+         end
+     end
+ end
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Menghitung opsi barrier call eropa dengan rumus Black-Scholes
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+d1=(log(S0/K)+(r+sigma^2/2)*(T-t))/(sigma*sqrt(T-t));
+d2=d1-sigma*sqrt(T-t);
+C=S0*normcdf(d1,0,1)-K*exp(-r*(T-0))*normcdf(d2,0,1);
+P=C+K*exp(-r*(T-t))-S0;
+
+d11=((log(((B^2)/S0)/K))+((r+(1/2)*(sigma^2))*(T-t)))/(sigma*(sqrt(T-t)));
+d22=((log(((B^2)/S0)/K))+((r-(1/2)*(sigma^2))*(T-t)))/(sigma*(sqrt(T-t)));
+CB=((B^2)/S0)*normcdf(d11,0,1)-K*(exp(-r*(T-t)))*normcdf(d22,0,1);
+callbar=C-((S0/B)^(1-((2*r)/(sigma^2))))*CB
+calleurope=C
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+calloutprice=CO(1,1)
+% callinprice=calleurope-calloutprice;
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Pohon Trinomial Harga Saham
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% figure(1)
+% for i=1:M+1
+%     for j=1:2*(i-1)+1
+%         hold on
+%         plot(i-1,S(j,i),'.')
+%     end
+% end
+% xlabel('t')
+% ylabel('S(t)')
+% title('Pohon Trinomial Harga Saham')
+% plot(0:0.01:M,K,'-c')
+% text(0.25,K,'Strike Price','HorizontalAlignment','left')
+% plot(0:0.01:M,B,'-m')
+% text(0.25,B,'Barrier','HorizontalAlignment','left')
+% hold off
+% grid on
+% axis square
+toc
