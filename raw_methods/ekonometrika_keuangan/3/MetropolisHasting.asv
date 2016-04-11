@@ -1,0 +1,30 @@
+%Metropolis Hasting algorithm
+%2 Mei 2012
+%Prepsred by M. Syamsuddin
+
+clear ;
+
+xLama = 1 ;
+yLama = 0.5 ;
+
+rep   = 1000 ;
+
+n     = 10 ;
+alpha = 1 ;
+beta  = 2 ;
+par   = [n alpha beta] ;
+
+propx(rep,1) = floor(rand*11) ;
+propy(rep,1) = unifrnd(-1,1,1,1) ;
+
+for i = 1:rep ;
+    xBaru = propx ;
+    yBaru = yLama + propy ;
+    alpha(i) = phi2([xBaru yBaru],par)/phi2([xLama yLama],par) ;
+    if rand <  alpha(i);
+      xLama = xBaru ;
+      yLama = yBaru ;
+    end ;
+        
+    sample(i,:) = [xLama yLama] ;
+end ;

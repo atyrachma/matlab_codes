@@ -1,0 +1,17 @@
+%Gibbs sampler
+%2 Mei 2012
+%Prepsred by M. Syamsuddin
+
+clear ;
+
+xLama = 1 ;
+yLama = 0.5 ;
+
+rep   = 10 ;
+
+n     = 10 ;
+alpha = 1 ;
+beta  = 2 ;
+
+for i = 1:rep ;
+    
