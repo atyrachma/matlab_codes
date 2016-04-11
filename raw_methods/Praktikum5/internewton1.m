@@ -1,0 +1,34 @@
+clear all;
+clc;
+
+n=4;
+disp('POLINOM INTERPOLASI (BEDA TERBAGI) NEWTON')
+disp('===================================================================')
+x=[-2.5 -2 -1.9 -1 0 1 1.5 2 2.5]
+fx=[35.94 -8.8 -3.61 -0.6 4 -0.4 -0.2 16.8 86.13]
+eps=10^-5;
+z=0.5;
+
+plama=fx(1);
+faktor=1;
+b(1)=fx(1);
+i=2;
+lanjut=true;
+while (i<=n) && lanjut
+    i
+    b(i)=fx(i);
+    for j=i-1:-1:1
+        b(j)=(b(j+1)-b(j))/(x(i)-x(j));
+    end
+    faktor=faktor*(z-x(i-1));
+    galat=b(1)*faktor;
+    pnewton=plama+galat
+    if abs(galat)<eps
+        lanjut=false;
+    end
+    plama=pnewton;
+    i=i+1;
+end
+disp(' ')
+disp(' ')
+disp(['Jadi, nilai f(',num2str(z),')= ',num2str(pnewton)])    
