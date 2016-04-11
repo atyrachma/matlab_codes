@@ -1,0 +1,43 @@
+Nama	: Aty Rachmawati
+NIM	: 10108050
+K-01	
+
+Matematika Numerik
+Praktikum III (Metode Jacobi dan Metode Gauss Seidel)
+
+Nama Dokumen : 
+Jacobi_10108050.m (penggunaan metode Jacobi untuk SPL 5x5)
+GaussSeidel_10108050.m  (penggunaan metode Gauss Seidel untuk SPL 5x5)
+
+======================================================================================================
+
+PENJELASAN
+Metode Gauss Seidel
+
+Prinsipnya hampir sama dengan metode Jacobi, yaitu melakukan iterasi pada tebakan awal solusi hingga
+didapatkan solusi yang tepat untuk suatu sistem persamaan linear.
+
+Perbedaannya terletak pada rumus iterasinya.
+
+Contoh iterasi pertama kedua metode tersebut untuk SPL n x n adalah sebagai berikut
+
+Dalam metode Jacobi kita mengoperasikan seluruh tebakan awal X0(x1, ..., xn) untuk iterasi pertama
+sementara dalam metode Gauss Seidel kita mengoperasikan seluruh tebakan awal hanya pada elemen ke-1
+iterasi pertama kemudian elemen ke-2 iterasi pertama didapat dengan mengoperasikan elemen pertama 
+iterasi pertama dan elemen tebakan awal sisanya (dari elemen ke-2 sampai elemen ke-n), begitu 
+seterusnya hingga pada akhirnya elemen ke-n iterasi pertama diperoleh dengan mengoperasikan (n-1) buah
+elemen iterasi pertama (dari elemen ke-1 sampai elemen ke-(n-1)) dengan elemen tebakan awal ke-n.
+
+Dengan demikian, metode Gauss Seidel memiliki kekonvergenan yang lebih cepat dibandingankan metode
+Jacobi.
+Namun, kedua metode tersebut tidak selalu konvergen untuk setiap matriks koefisien SPL.
+
+Syarat agar konvergen:
+matriks koefisien SPL harus bersifat dominan diagonal (yaitu nilai mutlak dari elemen diagonal harus
+>= jumlah elemen lain yang bukan elemen diagonal)
+
+Salah satu cara untuk membuat matriks bersifat dominan diagonal yaitu dengan menukarkan baris pada
+matriks tersebut.
+
+
+
